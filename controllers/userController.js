@@ -1,7 +1,8 @@
+const bcrypt = require("bcrypt");
 const User = require("../models/user");
 
 exports.createUser = async (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ where: { email } });
@@ -10,7 +11,9 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ error: "Email already Exists" });
     }
 
-    const user = await User.create(req.body);
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({ ...req.body, password: hashedPassword });
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: "Failed to create user" });
@@ -27,7 +30,12 @@ exports.logInUser = async (req, res) => {
       return res.status(404).json({ error: "Email not found" });
     }
 
-    if (password !== existingUser.password) {
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+
+    if (!isPasswordValid) {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
