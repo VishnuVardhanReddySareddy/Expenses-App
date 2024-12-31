@@ -11,15 +11,19 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + "/public"));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "signup.html"));
-});
-
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
+app.get("/add-expense", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "expense.html"));
+});
+
 app.use(SignUpRouter);
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "signup.html"));
+});
 
 sequelize
   .sync()
