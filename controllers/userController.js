@@ -63,11 +63,28 @@ exports.getAllExpenses = async (req, res) => {
     const expensesData = expenses.map((expense) =>
       expense.get({ plain: true })
     );
-
     res.status(200).json(expensesData);
   } catch (error) {
     res
       .status(500)
       .json({ error: "Failed to fetch expenses. Please try again." });
+  }
+};
+
+exports.deleteExpense = async (req, res) => {
+  const expenseId = req.params.id;
+
+  try {
+    const expense = await Expense.findByPk(expenseId);
+    if (!expense) {
+      return res.status(404).json({ message: "Expense not found" });
+    }
+    await expense.destroy();
+    res.status(200).json({ message: "Expense deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while deleting the expense" });
   }
 };
