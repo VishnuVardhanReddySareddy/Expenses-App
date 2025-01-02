@@ -3,6 +3,12 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db-config");
 
 const Expense = sequelize.define("Expense", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
   price: {
     type: DataTypes.FLOAT,
     allowNull: false,

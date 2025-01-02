@@ -1,11 +1,11 @@
 window.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem("token");
   axios
-    .get("/get-expenses")
+    .get("/get-expenses", { headers: { authorization: token } })
     .then((response) => {
-      console.log(response);
       response.data.forEach((expense) => displayExpenseOnScreen(expense));
     })
-    .catch((error) => console.log("Error fetching expenses:", error));
+    .catch((error) => console.log("Error fetching expenses:", error.message));
 });
 
 async function addExpenseData(event) {
@@ -17,10 +17,10 @@ async function addExpenseData(event) {
     product: formData.get("product"),
     category: formData.get("category"),
   };
-
+  const token = localStorage.getItem("token");
   try {
     const response = await axios.post("/add-expense", expenseData, {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", authorization: token },
     });
 
     if (response.status === 200) {
@@ -48,8 +48,11 @@ function displayExpenseOnScreen(expense) {
 }
 
 async function deleteExpense(event, expenseId) {
+  const token = localStorage.getItem("token");
   try {
-    const response = await axios.delete(`/delete-expense/${expenseId}`);
+    const response = await axios.delete(`/delete-expense/${expenseId}`, {
+      headers: { authorization: token },
+    });
 
     if (response.status === 200) {
       removeFromUI(expenseId);

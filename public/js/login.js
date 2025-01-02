@@ -7,17 +7,15 @@ async function handleLoginData(event) {
     password: formData.get("password"),
   };
 
-  console.log(loginData);
-
   try {
     const response = await axios.post("/login", loginData, {
       headers: { "Content-Type": "application/json" },
     });
 
     if (response.status === 200) {
-      alert("Logged in successfully!");
+      localStorage.setItem("token", response.data.token);
+
       window.location.href = "/add-expense";
-      event.target.reset();
     }
   } catch (error) {
     const errorMsg = document.getElementById("login-error-msg");
