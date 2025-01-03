@@ -116,6 +116,7 @@ document.getElementById("rzp-button").onclick = async function (e) {
         document.getElementById("rzp-button").style.display = "none";
         const premiumUserMessage = document.getElementById("premium-user");
         premiumUserMessage.textContent = "You are a Premium Member Now!";
+        document.getElementById("show-leaderboard").style.display = "block";
       } catch (error) {
         console.log("Error updating transaction:", error);
       }
@@ -159,7 +160,7 @@ document.getElementById("show-leaderboard").onclick = async function () {
     leaderboardDiv.innerHTML = "<h2>Leaderboard</h2>";
     leaderboard.forEach((user) => {
       const userDiv = document.createElement("div");
-      userDiv.textContent = `Name: ${user.name}'s Total Expenses : ${user.total_spent}`;
+      userDiv.textContent = `Name: ${user.fullName}'s Total Expenses : ${user.totalExpense}`;
       leaderboardDiv.appendChild(userDiv);
     });
   } catch (error) {

@@ -4,14 +4,19 @@ const Expense = require("../models/expense");
 
 exports.createExpense = async (req, res) => {
   const { price, product, category } = req.body;
+  const UserId = req.user.id;
 
   try {
     const expense = await Expense.create({
       price,
       product,
       category,
-      UserId: req.user.id,
+      UserId
     });
+
+    const user = await User.findByPk(UserId);
+    user.totalExpense += price;
+    await user.save();
     res.json(expense);
   } catch (error) {
     res.status(500).json({ error: "Failed to add Expense" });

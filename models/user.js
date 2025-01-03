@@ -24,8 +24,9 @@ const User = sequelize.define("User", {
   },
   ispremiumuser: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false, // Defaults to false, meaning the user is not a premium user by default
+    defaultValue: false,
   },
+  totalExpense: { type: DataTypes.FLOAT, defaultValue: 0 },
 });
 
 module.exports = User;
