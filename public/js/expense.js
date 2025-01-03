@@ -1,4 +1,4 @@
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const isPremiumUser = localStorage.getItem("ispremiumuser") === "true";
 
@@ -18,6 +18,20 @@ window.addEventListener("DOMContentLoaded", () => {
     })
     .catch((error) => console.log("Error fetching expenses:", error.message));
 });
+
+document.getElementById("show-leaderboard").onclick = async function () {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await axios.get("/premium/showleaderboard", {
+      headers: { authorization: token },
+    });
+
+    displayLeaderboard(response.data);
+  } catch (error) {
+    console.log("Error fetching leaderboard:", error.message);
+  }
+};
 
 async function addExpenseData(event) {
   event.preventDefault();
@@ -71,6 +85,16 @@ async function deleteExpense(event, expenseId) {
   } catch (error) {
     console.log(error);
   }
+}
+
+function displayLeaderboard(leaderboard) {
+  const leaderboardDiv = document.getElementById("leaderboard");
+  leaderboardDiv.innerHTML = "<h2>Leaderboard</h2>";
+  leaderboard.forEach((user) => {
+    const userDiv = document.createElement("div");
+    userDiv.textContent = `Name: ${user.fullName}'s Total Expenses are: ${user.totalExpense}`;
+    leaderboardDiv.appendChild(userDiv);
+  });
 }
 
 function removeFromUI(id) {
