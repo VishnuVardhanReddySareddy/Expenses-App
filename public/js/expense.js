@@ -1,5 +1,16 @@
 window.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
+  const isPremiumUser = localStorage.getItem("ispremiumuser") === "true";
+
+  if (isPremiumUser) {
+    document.getElementById("rzp-button").style.display = "none";
+    document.getElementById("premium-user").textContent =
+      "You are a Premium Member Now!";
+    document.getElementById("show-leaderboard").style.display = "block";
+  } else {
+    document.getElementById("premium-user").textContent = "";
+  }
+
   axios
     .get("/get-expenses", { headers: { authorization: token } })
     .then((response) => {
@@ -82,7 +93,7 @@ document.getElementById("rzp-button").onclick = async function (e) {
     handler: async function (response) {
       console.log("Payment successful:", response);
       try {
-        await axios.post(
+        const updateResponse = await axios.post(
           "/updatetransactionstatus",
           {
             order_id: options.order_id,
@@ -92,8 +103,19 @@ document.getElementById("rzp-button").onclick = async function (e) {
             headers: { Authorization: token },
           }
         );
-        console.log("Transaction updated successfully");
+        console.log("Transaction updated successfully:", updateResponse);
+
+        // Ensure the new token is stored in local storage
+        localStorage.setItem("token", updateResponse.data.token);
+        localStorage.setItem("ispremiumuser", true);
+
+        // Show the alert
         alert("You are a Premium User Now");
+
+        // DOM manipulation to hide the Buy Premium button and show a message
+        document.getElementById("rzp-button").style.display = "none";
+        const premiumUserMessage = document.getElementById("premium-user");
+        premiumUserMessage.textContent = "You are a Premium Member Now!";
       } catch (error) {
         console.log("Error updating transaction:", error);
       }
@@ -122,10 +144,27 @@ document.getElementById("rzp-button").onclick = async function (e) {
       console.log("Error updating failed transaction:", error);
     }
 
-    // Ensure the alert is shown
-    console.log("About to show alert");
     alert(`Payment Failed: ${response.error.description}`);
   });
+};
+
+document.getElementById("show-leaderboard").onclick = async function () {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.get("/premium/showleaderboard", {
+      headers: { authorization: token },
+    });
+    const leaderboard = response.data;
+    const leaderboardDiv = document.getElementById("leaderboard");
+    leaderboardDiv.innerHTML = "<h2>Leaderboard</h2>";
+    leaderboard.forEach((user) => {
+      const userDiv = document.createElement("div");
+      userDiv.textContent = `${user.name}: ${user.total_spent}`;
+      leaderboardDiv.appendChild(userDiv);
+    });
+  } catch (error) {
+    console.log("Error fetching leaderboard:", error.message);
+  }
 };
 
 document

@@ -41,7 +41,11 @@ exports.logInUser = async (req, res) => {
 
     const token = jwt.sign({ UserId: existingUser.id }, process.env.SECRET_KEY);
 
-    res.status(200).json({ message: "Login successful", token: token });
+    res.status(200).json({
+      message: "Login successful",
+      token: token,
+      ispremiumuser: existingUser.ispremiumuser,
+    });
   } catch (error) {
     res.status(500).json({ error: "Failed to log in" });
   }

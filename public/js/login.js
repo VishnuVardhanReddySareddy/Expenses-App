@@ -14,6 +14,7 @@ async function handleLoginData(event) {
 
     if (response.status === 200) {
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("ispremiumuser", response.data.ispremiumuser);
 
       window.location.href = "/add-expense";
     }

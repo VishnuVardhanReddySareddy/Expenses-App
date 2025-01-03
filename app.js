@@ -9,6 +9,7 @@ const sequelize = require("./config/db-config");
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
+const premiumRoutes = require("./routes/premiumRoutes");
 const User = require("./models/user");
 const Expense = require("./models/expense");
 const Order = require("./models/orders");
@@ -26,13 +27,16 @@ app.get("/add-expense", (req, res) => {
 app.use(userRoutes);
 app.use(expenseRoutes);
 app.use(purchaseRoutes);
+app.use("/premium", premiumRoutes);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "signup.html"));
 });
 
-User.hasMany(Expense);
-Expense.belongsTo(User);
+// User.hasMany(Expense);
+// Expense.belongsTo(User);
+User.hasMany(Expense, { foreignKey: "userId" });
+Expense.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Order);
 Order.belongsTo(User);
