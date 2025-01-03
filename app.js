@@ -33,10 +33,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "signup.html"));
 });
 
-// User.hasMany(Expense);
-// Expense.belongsTo(User);
-User.hasMany(Expense, { foreignKey: "userId" });
-Expense.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Expense);
+Expense.belongsTo(User);
+
 
 User.hasMany(Order);
 Order.belongsTo(User);

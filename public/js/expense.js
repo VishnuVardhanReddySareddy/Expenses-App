@@ -159,7 +159,7 @@ document.getElementById("show-leaderboard").onclick = async function () {
     leaderboardDiv.innerHTML = "<h2>Leaderboard</h2>";
     leaderboard.forEach((user) => {
       const userDiv = document.createElement("div");
-      userDiv.textContent = `${user.name}: ${user.total_spent}`;
+      userDiv.textContent = `Name: ${user.name}'s Total Expenses : ${user.total_spent}`;
       leaderboardDiv.appendChild(userDiv);
     });
   } catch (error) {

@@ -51,7 +51,7 @@ exports.updateTransactionStatus = async (req, res) => {
 
       // Generate a new token with updated ispremiumuser status
       const token = jwt.sign(
-        { userId: req.user.id, ispremiumuser: true },
+        { UserId: req.user.id, ispremiumuser: true },
         process.env.SECRET_KEY
       );
 
