@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
 const premiumRoutes = require("./routes/premiumRoutes");
+const forgotPassword = require("./routes/forgotPasswordRoute");
 const User = require("./models/user");
 const Expense = require("./models/expense");
 const Order = require("./models/orders");
@@ -28,6 +29,7 @@ app.use(userRoutes);
 app.use(expenseRoutes);
 app.use(purchaseRoutes);
 app.use("/premium", premiumRoutes);
+app.use(forgotPassword);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "signup.html"));
@@ -35,7 +37,6 @@ app.get("/", (req, res) => {
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
-
 
 User.hasMany(Order);
 Order.belongsTo(User);
