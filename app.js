@@ -10,11 +10,11 @@ const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
 const premiumRoutes = require("./routes/premiumRoutes");
-const forgotAndResetPassword = require("./routes/forgotPasswordRoute");
+const forgotPasswordRoutes = require("./routes/forgotPasswordRoute");
 const User = require("./models/user");
 const Expense = require("./models/expense");
 const Order = require("./models/orders");
-const ForgotPasswordRequests = require("./models/forgotPasswordRequests");
+const ForgotPasswordRequest = require("./models/ForgotPasswordRequest");
 
 const app = express();
 app.use(cors());
@@ -30,7 +30,7 @@ app.use(userRoutes);
 app.use(expenseRoutes);
 app.use(purchaseRoutes);
 app.use("/premium", premiumRoutes);
-app.use("/password", forgotAndResetPassword);
+app.use("/password", forgotPasswordRoutes);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "signup.html"));
@@ -41,8 +41,10 @@ Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
-ForgotPasswordRequests.belongsTo(User);
-User.hasMany(ForgotPasswordRequests);
+
+// Define associations
+ForgotPasswordRequest.belongsTo(User);
+User.hasMany(ForgotPasswordRequest);
 
 sequelize
   .sync()

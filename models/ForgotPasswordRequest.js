@@ -18,7 +18,4 @@ const ForgotPasswordRequest = sequelize.define("ForgotPasswordRequest", {
   },
 });
 
-// Define associations
-
-
 module.exports = ForgotPasswordRequest;
