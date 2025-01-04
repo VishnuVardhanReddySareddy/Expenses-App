@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Expense Dashboard</h1>
+      <button id="download-button" disabled>Download Expenses</button>
+    </header>
+
+    <section>
+      <div class="filter-options">
+        <label for="time-period">View Expenses and Incomes:</label>
+        <select id="time-period">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+
+      <table id="expense-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Income</th>
+            <th>Expense</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Expense rows will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p>Only for Premium Users</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="scripts.js"></script>
+  </body>
+</html>
