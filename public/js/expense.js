@@ -97,6 +97,27 @@ function displayLeaderboard(leaderboard) {
   });
 }
 
+function download() {
+  console.log("this is ");
+  const token = localStorage.getItem("token");
+  axios
+    .get("/download", { headers: { Authorization: token } })
+    .then((response) => {
+      if (response.status === 200) {
+        let a = document.createElement("a");
+        a.href = response.data.fileUrl;
+        console.log(response.data.fileUrl);
+        a.download = "myexpense.csv";
+        a.click();
+      } else {
+        throw new Error(response.data.message);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
 function removeFromUI(id) {
   document.getElementById(id).remove();
 }
