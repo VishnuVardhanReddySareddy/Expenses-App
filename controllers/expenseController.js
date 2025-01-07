@@ -33,7 +33,6 @@ exports.createExpense = async (req, res) => {
     res.status(500).json({ error: "Failed to add Expense" });
   }
 };
-
 exports.getAllExpenses = async (req, res) => {
   const page = parseInt(req.query._page, 10) || 1;
   const limit = parseInt(req.query._limit, 10) || 10;

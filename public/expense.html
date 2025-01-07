@@ -26,9 +26,17 @@
     <button id="show-leaderboard" style="display: none">
       Show Leaderboard
     </button>
+    <br />
 
+    <label for="items-per-page">Items per page:</label>
+    <select id="items-per-page" class="items-per-page">
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+      <option value="40">40</option>
+    </select>
     <ul id="list-items"></ul>
-
     <div class="pagination" id="pagination-controls">
       <button id="prev-page">Previous</button> <span id="page-info"></span>
       <button id="next-page">Next</button>

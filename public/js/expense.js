@@ -1,9 +1,13 @@
-const itemsPerPage = 10; // Define itemsPerPage at the top
+let currentPage = 1;
+const itemsPerPageDropdown = document.getElementById("items-per-page");
+
+// Load items per page from local storage or default to 10
+let itemsPerPage = parseInt(localStorage.getItem("itemsPerPage")) || 10;
+itemsPerPageDropdown.value = itemsPerPage;
 
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const isPremiumUser = localStorage.getItem("ispremiumuser") === "true";
-  let currentPage = 1;
 
   if (isPremiumUser) {
     document.getElementById("rzp-button").style.display = "none";
@@ -14,32 +18,46 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("premium-user").textContent = "";
   }
 
-  fetchExpenses(currentPage);
+  fetchExpenses(currentPage, itemsPerPage);
 
   document.getElementById("prev-page").addEventListener("click", () => {
     if (currentPage > 1) {
       currentPage--;
-      fetchExpenses(currentPage);
+      fetchExpenses(currentPage, itemsPerPage);
     }
   });
 
   document.getElementById("next-page").addEventListener("click", () => {
-    currentPage++;
-    fetchExpenses(currentPage);
+    const totalPages = parseInt(
+      document.getElementById("page-info").dataset.totalPages,
+      10
+    );
+    if (currentPage < totalPages) {
+      currentPage++;
+      fetchExpenses(currentPage, itemsPerPage);
+    }
   });
 
-  async function fetchExpenses(page) {
+  itemsPerPageDropdown.addEventListener("change", () => {
+    itemsPerPage = parseInt(itemsPerPageDropdown.value);
+    localStorage.setItem("itemsPerPage", itemsPerPage);
+    currentPage = 1; // Reset to first page
+    fetchExpenses(currentPage, itemsPerPage);
+  });
+
+  async function fetchExpenses(page, limit) {
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get("/get-expenses", {
         headers: { authorization: token },
         params: {
           _page: page,
-          _limit: itemsPerPage,
+          _limit: limit,
         },
       });
       const expenses = response.data;
       displayExpenses(expenses);
-      updatePaginationControls(page, response.headers["x-total-count"]);
+      updatePaginationControls(page, response.headers["x-total-count"], limit);
     } catch (error) {
       console.log("Error fetching expenses:", error.message);
     }
@@ -52,11 +70,12 @@ function displayExpenses(expenses) {
   expenses.forEach((expense) => displayExpenseOnScreen(expense));
 }
 
-function updatePaginationControls(page, totalItems) {
+function updatePaginationControls(page, totalItems, itemsPerPage) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   document.getElementById(
     "page-info"
   ).textContent = `Page ${page} of ${totalPages}`;
+  document.getElementById("page-info").dataset.totalPages = totalPages;
   document.getElementById("prev-page").classList.toggle("disabled", page <= 1);
   document
     .getElementById("next-page")
