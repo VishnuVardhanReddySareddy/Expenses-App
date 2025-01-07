@@ -1,6 +1,9 @@
+const itemsPerPage = 10; // Define itemsPerPage at the top
+
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const isPremiumUser = localStorage.getItem("ispremiumuser") === "true";
+  let currentPage = 1;
 
   if (isPremiumUser) {
     document.getElementById("rzp-button").style.display = "none";
@@ -11,13 +14,54 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("premium-user").textContent = "";
   }
 
-  axios
-    .get("/get-expenses", { headers: { authorization: token } })
-    .then((response) => {
-      response.data.forEach((expense) => displayExpenseOnScreen(expense));
-    })
-    .catch((error) => console.log("Error fetching expenses:", error.message));
+  fetchExpenses(currentPage);
+
+  document.getElementById("prev-page").addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      fetchExpenses(currentPage);
+    }
+  });
+
+  document.getElementById("next-page").addEventListener("click", () => {
+    currentPage++;
+    fetchExpenses(currentPage);
+  });
+
+  async function fetchExpenses(page) {
+    try {
+      const response = await axios.get("/get-expenses", {
+        headers: { authorization: token },
+        params: {
+          _page: page,
+          _limit: itemsPerPage,
+        },
+      });
+      const expenses = response.data;
+      displayExpenses(expenses);
+      updatePaginationControls(page, response.headers["x-total-count"]);
+    } catch (error) {
+      console.log("Error fetching expenses:", error.message);
+    }
+  }
 });
+
+function displayExpenses(expenses) {
+  const ul = document.getElementById("list-items");
+  ul.innerHTML = "";
+  expenses.forEach((expense) => displayExpenseOnScreen(expense));
+}
+
+function updatePaginationControls(page, totalItems) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  document.getElementById(
+    "page-info"
+  ).textContent = `Page ${page} of ${totalPages}`;
+  document.getElementById("prev-page").classList.toggle("disabled", page <= 1);
+  document
+    .getElementById("next-page")
+    .classList.toggle("disabled", page >= totalPages);
+}
 
 document.getElementById("show-leaderboard").onclick = async function () {
   const token = localStorage.getItem("token");

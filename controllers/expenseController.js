@@ -35,12 +35,19 @@ exports.createExpense = async (req, res) => {
 };
 
 exports.getAllExpenses = async (req, res) => {
+  const page = parseInt(req.query._page, 10) || 1;
+  const limit = parseInt(req.query._limit, 10) || 10;
+  const offset = (page - 1) * limit;
+
   try {
-    const expenses = await Expense.findAll({ where: { UserId: req.user.id } });
-    const expensesData = expenses.map((expense) =>
-      expense.get({ plain: true })
-    );
-    res.status(200).json(expensesData);
+    const { count, rows } = await Expense.findAndCountAll({
+      where: { UserId: req.user.id },
+      limit,
+      offset,
+    });
+
+    res.setHeader("x-total-count", count);
+    res.status(200).json(rows);
   } catch (error) {
     res
       .status(500)
