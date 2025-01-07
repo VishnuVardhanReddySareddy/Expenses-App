@@ -1,11 +1,11 @@
 const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(
-  "expense-db",
-  "root",
+  process.env.DB_NAME,
+  process.env.DB_USERNAME,
   process.env.SQL_PASSWORD,
   {
-    host: "localhost",
+    host: process.env.DB_HOST,
     dialect: "mysql",
   }
 );
