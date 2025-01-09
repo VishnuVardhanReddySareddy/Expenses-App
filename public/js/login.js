@@ -8,7 +8,7 @@ async function handleLoginData(event) {
   };
 
   try {
-    const response = await axios.post("/login", loginData, {
+    const response = await axios.post("user/login", loginData, {
       headers: { "Content-Type": "application/json" },
     });
 

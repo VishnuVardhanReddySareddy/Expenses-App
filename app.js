@@ -1,15 +1,12 @@
-require("dotenv").config();
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
-
 const morgan = require("morgan");
+require("dotenv").config();
 
 const sequelize = require("./config/db-config");
-
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
@@ -29,21 +26,16 @@ const accessLogStream = fs.createWriteStream(
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use(cors());
 app.use(bodyParser.json());
-
 app.use(express.static(__dirname + "/public"));
 
-app.get("/add-expense", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "expense.html"));
-});
-
-app.use(userRoutes);
+app.use("/user", userRoutes);
 app.use(expenseRoutes);
 app.use(purchaseRoutes);
 app.use("/premium", premiumRoutes);
 app.use("/password", forgotPasswordRoutes);
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "signup.html"));
+  res.sendFile(path.join(__dirname, "public"));
 });
 
 User.hasMany(Expense);
@@ -52,7 +44,6 @@ Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
 
-// Define associations
 ForgotPasswordRequest.belongsTo(User);
 User.hasMany(ForgotPasswordRequest);
 

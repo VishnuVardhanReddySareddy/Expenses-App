@@ -9,7 +9,7 @@ async function handleUserSubmittedData(event) {
   };
 
   try {
-    const response = await axios.post("/signup", userData, {
+    const response = await axios.post("user/signup", userData, {
       headers: { "Content-Type": "application/json" },
     });
 
