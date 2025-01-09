@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+require("dotenv").config();
 const sibApiV3Sdk = require("sib-api-v3-sdk");
 const User = require("../models/user");
 const ForgotPasswordRequest = require("../models/ForgotPasswordRequest");
@@ -28,7 +29,9 @@ exports.forgotPassword = async (req, res) => {
       isactive: true,
     });
 
-    const resetUrl = `http://localhost:3000/password/resetpassword/${id}`;
+    console.log(process.env.HOST_IP);
+
+    const resetUrl = `http://${process.env.HOST_IP}:3000/password/resetpassword/${id}`;
     const emailContent = {
       sender: { email: "vishhureddy@gmail.com" },
       to: [{ email }],

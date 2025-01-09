@@ -72,9 +72,15 @@ function displayExpenses(expenses) {
 
 function updatePaginationControls(page, totalItems, itemsPerPage) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  document.getElementById(
-    "page-info"
-  ).textContent = `Page ${page} of ${totalPages}`;
+
+  if (totalPages === 0) {
+    document.getElementById("page-info").textContent = `Page 0 of 0`;
+  } else {
+    document.getElementById(
+      "page-info"
+    ).textContent = `Page ${page} of ${totalPages}`;
+  }
+
   document.getElementById("page-info").dataset.totalPages = totalPages;
   document.getElementById("prev-page").classList.toggle("disabled", page <= 1);
   document
